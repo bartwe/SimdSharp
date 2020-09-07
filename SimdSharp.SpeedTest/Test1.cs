@@ -2,7 +2,7 @@
 using System.Diagnostics;
 
 namespace SimdSharp.SpeedTest {
-    public class Class1 {
+    public class Test1 {
         static void Main(string[] args) {
             var watch = new Stopwatch();
 
