@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace SimdSharp {
-    public struct Vector {
+    public struct VecFloat {
         const int BlockSize = 64;
 
         int _slots;
@@ -11,28 +11,28 @@ namespace SimdSharp {
 
         public int Count => _slots;
 
-        public static Vector Allocate(int slots) {
+        public static VecFloat Allocate(int slots) {
 #if DEBUG
             if (slots < 0)
                 throw new ArgumentOutOfRangeException("slots");
 #endif
             var blocks = (slots + BlockSize - 1) / BlockSize;
-            Vector vector;
-            vector._slots = slots;
-            vector._blocks = blocks;
-            vector._buffer = NativeMethods.AllocateFloat(blocks);
-            return vector;
+            VecFloat vecFloat;
+            vecFloat._slots = slots;
+            vecFloat._blocks = blocks;
+            vecFloat._buffer = NativeMethods.AllocateFloat(blocks);
+            return vecFloat;
         }
 
-        public static void Release(ref Vector vector) {
+        public static void Release(ref VecFloat vecFloat) {
 #if DEBUG
-            if (vector._buffer == IntPtr.Zero)
-                throw new ArgumentException("Vector is already released", "vector");
+            if (vecFloat._buffer == IntPtr.Zero)
+                throw new ArgumentException("Vector is already released", "vecFloat");
 #endif
-            NativeMethods.ReleaseFloat(vector._buffer);
-            vector._slots = 0;
-            vector._blocks = 0;
-            vector._buffer = IntPtr.Zero;
+            NativeMethods.ReleaseFloat(vecFloat._buffer);
+            vecFloat._slots = 0;
+            vecFloat._blocks = 0;
+            vecFloat._buffer = IntPtr.Zero;
         }
 
         public unsafe float this[int index] {
@@ -118,7 +118,7 @@ namespace SimdSharp {
             NativeMethods.SetAllFloat(_buffer, value, _blocks);
         }
 
-        public static void Min(Vector a, Vector b, Vector result) {
+        public static void Min(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -128,7 +128,7 @@ namespace SimdSharp {
             NativeMethods.MinFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void Max(Vector a, Vector b, Vector result) {
+        public static void Max(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -138,7 +138,7 @@ namespace SimdSharp {
             NativeMethods.MaxFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void Clamp(Vector values, Vector min, Vector max, Vector result) {
+        public static void Clamp(VecFloat values, VecFloat min, VecFloat max, VecFloat result) {
 #if DEBUG
             if ((values._slots != min._slots) || (values._slots != max._slots) || (values._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -148,11 +148,11 @@ namespace SimdSharp {
             NativeMethods.ClampFloat(values._buffer, min._buffer, max._buffer, result._buffer, result._blocks);
         }
 
-        public static float Sum(Vector vector) {
-            return NativeMethods.SumFloat(vector._buffer, vector._blocks);
+        public static float Sum(VecFloat vecFloat) {
+            return NativeMethods.SumFloat(vecFloat._buffer, vecFloat._blocks);
         }
 
-        public static void Add(Vector a, Vector b, Vector result) {
+        public static void Add(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -162,7 +162,7 @@ namespace SimdSharp {
             NativeMethods.AddFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void Subtract(Vector a, Vector b, Vector result) {
+        public static void Subtract(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -172,7 +172,7 @@ namespace SimdSharp {
             NativeMethods.SubtractFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void Multiply(Vector a, Vector b, Vector result) {
+        public static void Multiply(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -182,7 +182,7 @@ namespace SimdSharp {
             NativeMethods.MultiplyFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void Divide(Vector a, Vector b, Vector result) {
+        public static void Divide(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
             if ((a._slots != b._slots) || (a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -192,7 +192,7 @@ namespace SimdSharp {
             NativeMethods.DivideFloat(a._buffer, b._buffer, result._buffer, result._blocks);
         }
 
-        public static void MultiplyAdd(Vector a, Vector b, Vector c, Vector result) {
+        public static void MultiplyAdd(VecFloat a, VecFloat b, VecFloat c, VecFloat result) {
 #if DEBUG
             if ((a._slots != result._slots) || (b._slots != result._slots) || (c._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -202,7 +202,7 @@ namespace SimdSharp {
             NativeMethods.MultiplyAddFloat(a._buffer, b._buffer, c._buffer, result._buffer, result._blocks);
         }
 
-        public static void Floor(Vector a, Vector result) {
+        public static void Floor(VecFloat a, VecFloat result) {
 #if DEBUG
             if ((a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -212,7 +212,7 @@ namespace SimdSharp {
             NativeMethods.FloorFloat(a._buffer, result._buffer, result._blocks);
         }
 
-        public static void Ceil(Vector a, Vector result) {
+        public static void Ceil(VecFloat a, VecFloat result) {
 #if DEBUG
             if ((a._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
@@ -223,7 +223,7 @@ namespace SimdSharp {
         }
 
         // result[i] = a[i] ? b[i] : c[i]
-        public static void Select(Vector a, Vector b, Vector c, Vector result) {
+        public static void Select(VecFloat a, VecFloat b, VecFloat c, VecFloat result) {
 #if DEBUG
             if ((a._slots != result._slots) || (b._slots != result._slots) || (c._slots != result._slots))
                 throw new ArgumentOutOfRangeException();
