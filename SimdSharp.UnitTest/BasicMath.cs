@@ -1,8 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SimdSharp;
 using System;
+using System.Diagnostics;
 
-namespace SimdShard.UnitTest {
+namespace SimdSharp.UnitTest {
     [TestClass]
     public class BasicMath {
         [TestMethod]
@@ -173,6 +174,53 @@ namespace SimdShard.UnitTest {
             VecFloat.Release(ref a);
             VecFloat.Release(ref b);
             VecFloat.Release(ref r);
+        }
+
+        [TestMethod]
+        public void SpeedTest1() {
+            Stopwatch watch = new Stopwatch();
+            int allocSize = 100000;
+
+
+            watch.Start();
+            var a = VecFloat.Allocate(allocSize);
+            a.SetAll(2);
+
+            var b = VecFloat.Allocate(allocSize);
+            b.SetAll(5);
+
+            var r = VecFloat.Allocate(allocSize);
+
+            VecFloat.Add(a, b, r);
+
+            VecFloat.Release(ref a);
+            VecFloat.Release(ref b);
+            VecFloat.Release(ref r);
+            watch.Stop();
+
+            Console.WriteLine("SimdSharp: " + watch.ElapsedMilliseconds);
+
+
+            //watch.Restart();
+            watch.Reset();
+            watch.Start();
+
+            float[] qa = new float[allocSize];
+            float[] qb = new float[allocSize];
+            float[] qr = new float[allocSize];
+
+            for (int i = 0; i < allocSize; i++) {
+                qa[i] = 2;
+                qb[i] = 5;
+            }
+
+
+            for (int i = 0; i < allocSize; i++) {
+                qr[i] = qa[i] + qb[i];
+            }
+            watch.Stop();
+
+            Console.WriteLine("Loop: " + watch.ElapsedMilliseconds);
         }
     }
 }
