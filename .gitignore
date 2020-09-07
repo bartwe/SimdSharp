@@ -5,3 +5,4 @@
 *.csproj.user
 /SimdSharp.Native/Debug/
 *.vcxproj.user
+*/bin/Debug/

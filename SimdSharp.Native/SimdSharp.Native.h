@@ -35,7 +35,7 @@ SSN_DECLSPEC void SSN_CDECL MinFloat(float* buffer, float* min, float* result, i
 SSN_DECLSPEC void SSN_CDECL MaxFloat(float* buffer, float* max, float* result, int32_t blocks);
 SSN_DECLSPEC void SSN_CDECL ClampFloat(float* buffer, float* low, float* high, float* result, int32_t blocks);
 
-SSN_DECLSPEC float SSN_CDECL SumFloat(float* buffer, int blocks);
+SSN_DECLSPEC float SSN_CDECL SumFloat(float* buffer, int count);
 SSN_DECLSPEC void SSN_CDECL AddFloat(float* a, float* b, float* result, int blocks);
 SSN_DECLSPEC void SSN_CDECL SubtractFloat(float* a, float* b, float* result, int blocks);
 SSN_DECLSPEC void SSN_CDECL MultiplyFloat(float* a, float* b, float* result, int blocks);

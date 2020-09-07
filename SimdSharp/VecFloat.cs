@@ -5,22 +5,19 @@ namespace SimdSharp {
     public struct VecFloat {
         const int BlockSize = 64;
 
-        int _slots;
-        int _blocks;
+        int _count;
         IntPtr _buffer;
 
-        public int Count => _slots;
+        public int Count => _count;
 
-        public static VecFloat Allocate(int slots) {
+        public static VecFloat Allocate(int count) {
 #if DEBUG
-            if (slots < 0)
-                throw new ArgumentOutOfRangeException("slots");
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("count");
 #endif
-            var blocks = (slots + BlockSize - 1) / BlockSize;
             VecFloat vecFloat;
-            vecFloat._slots = slots;
-            vecFloat._blocks = blocks;
-            vecFloat._buffer = NativeMethods.AllocateFloat(blocks);
+            vecFloat._count = count;
+            vecFloat._buffer = NativeMethods.AllocateFloat(count);
             return vecFloat;
         }
 
@@ -30,15 +27,14 @@ namespace SimdSharp {
                 throw new ArgumentException("Vector is already released", "vecFloat");
 #endif
             NativeMethods.ReleaseFloat(vecFloat._buffer);
-            vecFloat._slots = 0;
-            vecFloat._blocks = 0;
+            vecFloat._count = 0;
             vecFloat._buffer = IntPtr.Zero;
         }
 
         public unsafe float this[int index] {
             get {
 #if DEBUG
-                if ((index < 0) || (index >= _slots))
+                if ((index < 0) || (index >= _count))
                     throw new ArgumentOutOfRangeException("index");
                 if (_buffer == IntPtr.Zero)
                     throw new ArgumentException("Vector is not allocated", "vector");
@@ -48,7 +44,7 @@ namespace SimdSharp {
             }
             set {
 #if DEBUG
-                if ((index < 0) || (index >= _slots))
+                if ((index < 0) || (index >= _count))
                     throw new ArgumentOutOfRangeException("index");
                 if (_buffer == IntPtr.Zero)
                     throw new ArgumentException("Vector is not allocated", "vector");
@@ -60,7 +56,7 @@ namespace SimdSharp {
 
         public unsafe void Set(int index, float value) {
 #if DEBUG
-            if ((index < 0) || (index >= _slots))
+            if ((index < 0) || (index >= _count))
                 throw new ArgumentOutOfRangeException("index");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
@@ -71,7 +67,7 @@ namespace SimdSharp {
 
         public unsafe float Get(int index) {
 #if DEBUG
-            if ((index < 0) || (index >= _slots))
+            if ((index < 0) || (index >= _count))
                 throw new ArgumentOutOfRangeException("index");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
@@ -82,11 +78,11 @@ namespace SimdSharp {
 
         public unsafe void SetRange(int offset, float[] values, int valuesOffset, int count) {
 #if DEBUG
-            if ((offset < 0) || (offset >= _slots))
+            if ((offset < 0) || (offset >= _count))
                 throw new ArgumentOutOfRangeException("offset");
-            if ((valuesOffset < 0) || (valuesOffset >= _slots))
+            if ((valuesOffset < 0) || (valuesOffset >= _count))
                 throw new ArgumentOutOfRangeException("valuesOffset");
-            if ((count < 0) || ((offset + count) >= _slots) || ((valuesOffset + count) >= _slots))
+            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= _count))
                 throw new ArgumentOutOfRangeException("count");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
@@ -97,11 +93,11 @@ namespace SimdSharp {
 
         public unsafe void GetRange(int offset, float[] values, int valuesOffset, int count) {
 #if DEBUG
-            if ((offset < 0) || (offset >= _slots))
+            if ((offset < 0) || (offset >= _count))
                 throw new ArgumentOutOfRangeException("offset");
-            if ((valuesOffset < 0) || (valuesOffset >= _slots))
+            if ((valuesOffset < 0) || (valuesOffset >= _count))
                 throw new ArgumentOutOfRangeException("valuesOffset");
-            if ((count < 0) || ((offset + count) >= _slots) || ((valuesOffset + count) >= _slots))
+            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= _count))
                 throw new ArgumentOutOfRangeException("count");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
@@ -115,122 +111,122 @@ namespace SimdSharp {
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
 #endif
-            NativeMethods.SetAllFloat(_buffer, value, _blocks);
+            NativeMethods.SetAllFloat(_buffer, value, _count);
         }
 
         public static void Min(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.MinFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.MinFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void Max(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.MaxFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.MaxFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void Clamp(VecFloat values, VecFloat min, VecFloat max, VecFloat result) {
 #if DEBUG
-            if ((values._slots != min._slots) || (values._slots != max._slots) || (values._slots != result._slots))
+            if ((values._count != min._count) || (values._count != max._count) || (values._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == values._buffer) || (result._buffer == min._buffer) || (result._buffer == max._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.ClampFloat(values._buffer, min._buffer, max._buffer, result._buffer, result._blocks);
+            NativeMethods.ClampFloat(values._buffer, min._buffer, max._buffer, result._buffer, result._count);
         }
 
         public static float Sum(VecFloat vecFloat) {
-            return NativeMethods.SumFloat(vecFloat._buffer, vecFloat._blocks);
+            return NativeMethods.SumFloat(vecFloat._buffer, vecFloat._count);
         }
 
         public static void Add(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.AddFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.AddFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void Subtract(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.SubtractFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.SubtractFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void Multiply(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.MultiplyFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.MultiplyFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void Divide(VecFloat a, VecFloat b, VecFloat result) {
 #if DEBUG
-            if ((a._slots != b._slots) || (a._slots != result._slots))
+            if ((a._count != b._count) || (a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.DivideFloat(a._buffer, b._buffer, result._buffer, result._blocks);
+            NativeMethods.DivideFloat(a._buffer, b._buffer, result._buffer, result._count);
         }
 
         public static void MultiplyAdd(VecFloat a, VecFloat b, VecFloat c, VecFloat result) {
 #if DEBUG
-            if ((a._slots != result._slots) || (b._slots != result._slots) || (c._slots != result._slots))
+            if ((a._count != result._count) || (b._count != result._count) || (c._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer) || (result._buffer == c._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.MultiplyAddFloat(a._buffer, b._buffer, c._buffer, result._buffer, result._blocks);
+            NativeMethods.MultiplyAddFloat(a._buffer, b._buffer, c._buffer, result._buffer, result._count);
         }
 
         public static void Floor(VecFloat a, VecFloat result) {
 #if DEBUG
-            if ((a._slots != result._slots))
+            if ((a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.FloorFloat(a._buffer, result._buffer, result._blocks);
+            NativeMethods.FloorFloat(a._buffer, result._buffer, result._count);
         }
 
         public static void Ceil(VecFloat a, VecFloat result) {
 #if DEBUG
-            if ((a._slots != result._slots))
+            if ((a._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.CeilFloat(a._buffer, result._buffer, result._blocks);
+            NativeMethods.CeilFloat(a._buffer, result._buffer, result._count);
         }
 
         // result[i] = a[i] ? b[i] : c[i]
         public static void Select(VecFloat a, VecFloat b, VecFloat c, VecFloat result) {
 #if DEBUG
-            if ((a._slots != result._slots) || (b._slots != result._slots) || (c._slots != result._slots))
+            if ((a._count != result._count) || (b._count != result._count) || (c._count != result._count))
                 throw new ArgumentOutOfRangeException();
             if ((result._buffer == a._buffer) || (result._buffer == b._buffer) || (result._buffer == c._buffer))
                 throw new ArgumentException("Result vector may not also be input vector", "result");
 #endif
-            NativeMethods.SelectFloat(a._buffer, b._buffer, c._buffer, result._buffer, result._blocks);
+            NativeMethods.SelectFloat(a._buffer, b._buffer, c._buffer, result._buffer, result._count);
         }
     }
 
@@ -260,7 +256,7 @@ namespace SimdSharp {
         public static extern unsafe void ClampFloat(IntPtr buffer, IntPtr low, IntPtr high, IntPtr result, int blocks);
 
         [DllImport("SimdSharpNative.dll", EntryPoint = "SumFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe float SumFloat(IntPtr buffer, int blocks);
+        public static extern unsafe float SumFloat(IntPtr buffer, int count);
 
         [DllImport("SimdSharpNative.dll", EntryPoint = "AddFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
         public static extern unsafe void AddFloat(IntPtr a, IntPtr b, IntPtr result, int blocks);
