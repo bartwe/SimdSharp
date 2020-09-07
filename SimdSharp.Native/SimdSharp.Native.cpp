@@ -25,12 +25,12 @@ void SSN_CDECL SetRangeFloat(float* __restrict buffer, int32_t offset, float* __
 }
 
 void SSN_CDECL SetAllFloat(float* __restrict buffer, float value, int32_t count) {
-	for (int i = 0; i < count; ++i)
+	for (int32_t i = 0; i < count; ++i)
 		buffer[i] = value;
 }
 
 void SSN_CDECL MinFloat(float* __restrict buffer, float* __restrict min, float* __restrict result, int32_t count) {
-	for (int i = 0; i < count; ++i) {
+	for (int32_t i = 0; i < count; ++i) {
 		auto a = buffer[i];
 		auto b = min[i];
 		if (a > b)
@@ -40,7 +40,7 @@ void SSN_CDECL MinFloat(float* __restrict buffer, float* __restrict min, float* 
 }
 
 void SSN_CDECL MaxFloat(float* __restrict buffer, float* __restrict max, float* __restrict result, int32_t count) {
-	for (int i = 0; i < count; ++i) {
+	for (int32_t i = 0; i < count; ++i) {
 		auto a = buffer[i];
 		auto b = max[i];
 		if (a < b)
@@ -50,7 +50,7 @@ void SSN_CDECL MaxFloat(float* __restrict buffer, float* __restrict max, float* 
 }
 
 void SSN_CDECL ClampFloat(float* __restrict buffer, float* __restrict low, float* __restrict high, float* __restrict result, int32_t count) {
-	for (int i = 0; i < count; ++i) {
+	for (int32_t i = 0; i < count; ++i) {
 		auto a = buffer[i];
 		auto c = high[i];
 		if (a > c)
@@ -63,60 +63,58 @@ void SSN_CDECL ClampFloat(float* __restrict buffer, float* __restrict low, float
 }
 
 
-float SSN_CDECL SumFloat(float* __restrict buffer, int count) {
+float SSN_CDECL SumFloat(float* __restrict buffer, int32_t count) {
 	float result = 0.0f;
-	for (int i = 0; i < count; ++i) {
+	for (int32_t i = 0; i < count; ++i) {
 		result += buffer[i];
 	}
 	return result;
 }
 
-void SSN_CDECL AddFloat(float* __restrict a, float* __restrict b, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL AddFloat(float* __restrict a, float* __restrict b, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] + b[i];
 	}
 }
 
-void SSN_CDECL SubtractFloat(float* __restrict a, float* __restrict b, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL SubtractFloat(float* __restrict a, float* __restrict b, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] - b[i];
 	}
 }
 
-void SSN_CDECL MultiplyFloat(float* __restrict a, float* __restrict b, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL MultiplyFloat(float* __restrict a, float* __restrict b, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] * b[i];
 	}
 }
 
-void SSN_CDECL DivideFloat(float* __restrict a, float* __restrict b, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL DivideFloat(float* __restrict a, float* __restrict b, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] / b[i];
 	}
 }
 
-void SSN_CDECL MultiplyAddFloat(float* __restrict a, float* __restrict b, float* __restrict c, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL MultiplyAddFloat(float* __restrict a, float* __restrict b, float* __restrict c, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] * b[i] + c[i];
 	}
 }
 
-void SSN_CDECL FloorFloat(float* __restrict a, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL FloorFloat(float* __restrict a, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = std::floor(a[i]);
 	}
-	a = &a[SSN_VECTOR_SIZE];
-	result = &result[SSN_VECTOR_SIZE];
 }
 
-void SSN_CDECL CeilFloat(float* __restrict a, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL CeilFloat(float* __restrict a, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = std::ceil(a[i]);
 	}
 }
 
-void SSN_CDECL SelectFloat(float* __restrict a, float* __restrict b, float* __restrict c, float* __restrict result, int count) {
-	for (int i = 0; i < count; ++i) {
+void SSN_CDECL SelectFloat(float* __restrict a, float* __restrict b, float* __restrict c, float* __restrict result, int32_t count) {
+	for (int32_t i = 0; i < count; ++i) {
 		result[i] = a[i] ? b[i] : c[i];
 	}
 }

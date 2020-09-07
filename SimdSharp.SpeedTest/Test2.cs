@@ -68,8 +68,7 @@ namespace SimdSharp.SpeedTest {
             Console.WriteLine("Loop: " + watch.ElapsedMilliseconds);
 
 
-
-
+            //not a fair test, its only using half its contents, wasting 50% cache and its not sped up in .net framework with intrinsics anyways
             Vector2[] va = new Vector2[allocSize];
             Vector2[] vb = new Vector2[allocSize];
             Vector2[] vr = new Vector2[allocSize];
