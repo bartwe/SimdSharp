@@ -1,0 +1,2 @@
+#define SIMDSHARPNATIVE_API __declspec(dllexport)
+#define SIMDSHARPNATIVE_API __declspec(dllimport)
