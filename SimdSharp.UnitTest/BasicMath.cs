@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SimdSharp;
 using System;
 using System.Diagnostics;
 
@@ -92,7 +91,7 @@ namespace SimdSharp.UnitTest {
             VecFloat.Add(a, b, r);
 
             for (var i = 0; i < r.Count; ++i) {
-                if (r[i] != 2+i)
+                if (r[i] != 2 + i)
                     throw new Exception();
             }
             VecFloat.Release(ref a);
@@ -166,61 +165,15 @@ namespace SimdSharp.UnitTest {
 
             for (var i = 0; i < r.Count; ++i) {
                 var av = 2.0f;
-                var bv = (float)i;
+                var bv = (float)(i);
                 var rv = av / bv;
-                if (r[i] != rv)
-                    throw new Exception();
+                var d = r[i] - rv;
+                if (Math.Abs(d) > 0.000001f)
+                    throw new Exception("Index: "+i+" r:"+r[i]+" a:"+a[i]+" b:"+b[i]+" s:"+av+":"+bv+":"+rv+" d:"+d);
             }
             VecFloat.Release(ref a);
             VecFloat.Release(ref b);
             VecFloat.Release(ref r);
-        }
-
-        [TestMethod]
-        public void SpeedTest1() {
-            Stopwatch watch = new Stopwatch();
-            int allocSize = 100000;
-
-
-            watch.Start();
-            var a = VecFloat.Allocate(allocSize);
-            a.SetAll(2);
-
-            var b = VecFloat.Allocate(allocSize);
-            b.SetAll(5);
-
-            var r = VecFloat.Allocate(allocSize);
-
-            VecFloat.Add(a, b, r);
-
-            VecFloat.Release(ref a);
-            VecFloat.Release(ref b);
-            VecFloat.Release(ref r);
-            watch.Stop();
-
-            Console.WriteLine("SimdSharp: " + watch.ElapsedMilliseconds);
-
-
-            //watch.Restart();
-            watch.Reset();
-            watch.Start();
-
-            float[] qa = new float[allocSize];
-            float[] qb = new float[allocSize];
-            float[] qr = new float[allocSize];
-
-            for (int i = 0; i < allocSize; i++) {
-                qa[i] = 2;
-                qb[i] = 5;
-            }
-
-
-            for (int i = 0; i < allocSize; i++) {
-                qr[i] = qa[i] + qb[i];
-            }
-            watch.Stop();
-
-            Console.WriteLine("Loop: " + watch.ElapsedMilliseconds);
         }
     }
 }
