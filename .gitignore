@@ -6,3 +6,5 @@
 /SimdSharp.Native/Debug/
 *.vcxproj.user
 */bin/Debug/
+/Release/
+*/Release/
