@@ -3,8 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace SimdSharp {
     public struct VecFloat {
-        const int BlockSize = 64;
-
         int _count;
         IntPtr _buffer;
 
@@ -80,9 +78,11 @@ namespace SimdSharp {
 #if DEBUG
             if ((offset < 0) || (offset >= _count))
                 throw new ArgumentOutOfRangeException("offset");
-            if ((valuesOffset < 0) || (valuesOffset >= _count))
+            if (values == null)
+                throw new ArgumentNullException("values");
+            if ((valuesOffset < 0) || (valuesOffset >= _count) || (valuesOffset >= values.Length))
                 throw new ArgumentOutOfRangeException("valuesOffset");
-            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= _count))
+            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= values.Length))
                 throw new ArgumentOutOfRangeException("count");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
@@ -95,9 +95,11 @@ namespace SimdSharp {
 #if DEBUG
             if ((offset < 0) || (offset >= _count))
                 throw new ArgumentOutOfRangeException("offset");
-            if ((valuesOffset < 0) || (valuesOffset >= _count))
+            if (values == null)
+                throw new ArgumentNullException("values");
+            if ((valuesOffset < 0) || (valuesOffset >= _count) || (valuesOffset >= values.Length))
                 throw new ArgumentOutOfRangeException("valuesOffset");
-            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= _count))
+            if ((count < 0) || ((offset + count) >= _count) || ((valuesOffset + count) >= values.Length))
                 throw new ArgumentOutOfRangeException("count");
             if (_buffer == IntPtr.Zero)
                 throw new ArgumentException("Vector is not allocated", "vector");
