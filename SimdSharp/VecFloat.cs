@@ -7,6 +7,7 @@ namespace SimdSharp {
         internal IntPtr _buffer;
 
         public int Count => _count;
+        public unsafe float* Buffer => (float*)_buffer;
 
         public static VecFloat Allocate(int count) {
 #if DEBUG

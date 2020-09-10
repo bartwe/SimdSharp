@@ -206,7 +206,22 @@ namespace SimdSharp {
             VecFloat.Abs(a.Z, result.Z);
         }
 
-        internal class NativeMethods {
+        public static void Verlet(VecFloat3 positionIn, VecFloat3 velocityIn, VecFloat3 accelerationIn, VecFloat3 forceIn, VecFloat drag, VecFloat mass, float deltaTime, VecFloat3 positionOut, VecFloat3 velocityOut, VecFloat3 accelerationOut) {
+            NativeMethods.VerletFloat3(
+                 positionIn.X._buffer, positionIn.Y._buffer, positionIn.Z._buffer,
+                 velocityIn.X._buffer, velocityIn.Y._buffer, velocityIn.Z._buffer,
+                 accelerationIn.X._buffer, accelerationIn.Y._buffer, accelerationIn.Z._buffer,
+                 forceIn.X._buffer, forceIn.Y._buffer, forceIn.Z._buffer,
+                 drag._buffer,
+                 mass._buffer,
+                 deltaTime,
+                 positionOut.X._buffer, positionOut.Y._buffer, positionOut.Z._buffer,
+                 velocityOut.X._buffer, velocityOut.Y._buffer, velocityOut.Z._buffer,
+                 accelerationOut.X._buffer, accelerationOut.Y._buffer, accelerationOut.Z._buffer,
+                positionIn.Count);
+        }
+
+        class NativeMethods {
             [DllImport("SimdSharpNative.dll", EntryPoint = "NormalizeFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
             public static extern unsafe void NormalizeFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr rx, IntPtr ry, IntPtr rz, int count);
             [DllImport("SimdSharpNative.dll", EntryPoint = "LengthFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
@@ -217,6 +232,19 @@ namespace SimdSharp {
             public static extern unsafe void DotFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr bx, IntPtr by, IntPtr bz, IntPtr r, int count);
             [DllImport("SimdSharpNative.dll", EntryPoint = "DistanceFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
             public static extern unsafe void DistanceFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr bx, IntPtr by, IntPtr bz, IntPtr r, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "VerletFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void VerletFloat3(
+                IntPtr positionInX, IntPtr positionInY, IntPtr positionInZ,
+                IntPtr velocityInX, IntPtr velocityInY, IntPtr velocityInZ,
+                IntPtr accelerationInX, IntPtr accelerationInY, IntPtr accelerationInZ,
+                IntPtr gravityX, IntPtr gravityY, IntPtr gravityZ,
+                IntPtr drag,
+                IntPtr mass,
+                float deltaTime,
+                IntPtr positionOutX, IntPtr positionOutY, IntPtr positionOutZ,
+                IntPtr velocityOutX, IntPtr velocityOutY, IntPtr velocityOutZ,
+                IntPtr accelerationOutX, IntPtr accelerationOutY, IntPtr accelerationOutZ,
+                int count);
         }
     }
 }

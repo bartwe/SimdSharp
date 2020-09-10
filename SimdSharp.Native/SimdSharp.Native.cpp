@@ -185,3 +185,36 @@ void SSN_CDECL DistanceFloat3(float* __restrict ax, float* __restrict ay, float*
 		r[i] = sqrtf(x * x + y * y + z * z);
 	}
 }
+
+void SSN_CDECL VerletFloat3(
+	float* __restrict positionInX, float* __restrict positionInY, float* __restrict positionInZ,
+	float* __restrict velocityInX, float* __restrict velocityInY, float* __restrict velocityInZ,
+	float* __restrict accelerationInX, float* __restrict accelerationInY, float* __restrict accelerationInZ,
+	float* __restrict gravityX, float* __restrict gravityY, float* __restrict gravityZ,
+	float* __restrict drag,
+	float* __restrict mass,
+	float deltaTime,
+	float* __restrict positionOutX, float* __restrict positionOutY, float* __restrict positionOutZ,
+	float* __restrict velocityOutX, float* __restrict velocityOutY, float* __restrict velocityOutZ,
+	float* __restrict accelerationOutX, float* __restrict accelerationOutY, float* __restrict accelerationOutZ,
+	int32_t count) {
+	auto deltaTimeHalf = deltaTime * 0.5f;
+	auto deltaTimeHalfSquared = deltaTime * deltaTimeHalf;
+	for (int32_t i = 0; i < count; ++i) {
+		positionOutX[i] = positionInX[i] + velocityInX[i] * deltaTime + accelerationInX[i] * deltaTimeHalfSquared;
+		auto accelerationX = gravityX[i] - ((0.5f * drag[i] * velocityInX[i] * std::abs(velocityInX[i])) / mass[i]);
+		velocityOutX[i] = velocityInX[i] + (accelerationInX[i] + accelerationX) * deltaTimeHalf;
+		accelerationOutX[i] = accelerationX;
+
+		positionOutY[i] = positionInY[i] + velocityInY[i] * deltaTime + accelerationInY[i] * deltaTimeHalfSquared;
+		auto accelerationY = gravityY[i] - ((0.5f * drag[i] * velocityInY[i] * std::abs(velocityInY[i])) / mass[i]);
+		velocityOutY[i] = velocityInY[i] + (accelerationInY[i] + accelerationY) * deltaTimeHalf;
+		accelerationOutY[i] = accelerationY;
+
+		positionOutZ[i] = positionInZ[i] + velocityInZ[i] * deltaTime + accelerationInZ[i] * deltaTimeHalfSquared;
+		auto accelerationZ = gravityZ[i] - ((0.5f * drag[i] * velocityInZ[i] * std::abs(velocityInZ[i])) / mass[i]);
+		velocityOutZ[i] = velocityInZ[i] + (accelerationInZ[i] + accelerationZ) * deltaTimeHalf;
+		accelerationOutZ[i] = accelerationZ;
+	}
+}
+

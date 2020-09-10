@@ -53,6 +53,19 @@ SSN_DECLSPEC void SSN_CDECL DotFloat3(float* __restrict ax, float* __restrict ay
 SSN_DECLSPEC void SSN_CDECL LerpFloat(float* __restrict a, float* __restrict b, float* __restrict v, float* __restrict r, int32_t count);
 SSN_DECLSPEC void SSN_CDECL DistanceFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
 
+SSN_DECLSPEC void SSN_CDECL VerletFloat3(
+	float* __restrict positionInX, float* __restrict positionInY, float* __restrict positionInZ,
+	float* __restrict velocityInX, float* __restrict velocityInY, float* __restrict velocityInZ,
+	float* __restrict accelerationInX, float* __restrict accelerationInY, float* __restrict accelerationInZ,
+	float* __restrict gravityX, float* __restrict gravityY, float* __restrict gravityZ,
+	float* __restrict drag,
+	float* __restrict mass,
+	float deltaTime,
+	float* __restrict positionOutX, float* __restrict positionOutY, float* __restrict positionOutZ,
+	float* __restrict velocityOutX, float* __restrict velocityOutY, float* __restrict velocityOutZ,
+	float* __restrict accelerationOutX, float* __restrict accelerationOutY, float* __restrict accelerationOutZ,
+	int32_t count);
+
 SSN_EXTERN_C_END
 
 #endif //SimdSharp_Native_h
