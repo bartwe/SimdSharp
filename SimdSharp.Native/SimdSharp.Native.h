@@ -45,6 +45,14 @@ SSN_DECLSPEC void SSN_CDECL FloorFloat(float* a, float* result, int32_t count);
 SSN_DECLSPEC void SSN_CDECL CeilFloat(float* a, float* result, int32_t count);
 SSN_DECLSPEC void SSN_CDECL Selectloat(float* a, float* b, float* c, float* result, int32_t count);
 
+SSN_DECLSPEC void SSN_CDECL NormalizeFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict rx, float* __restrict ry, float* __restrict rz, int32_t count);
+SSN_DECLSPEC void SSN_CDECL LengthFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict r, int32_t count);
+SSN_DECLSPEC void SSN_CDECL LengthSquaredFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict r, int32_t count);
+SSN_DECLSPEC void SSN_CDECL AbsFloat(float* __restrict a, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL DotFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
+SSN_DECLSPEC void SSN_CDECL LerpFloat(float* __restrict a, float* __restrict b, float* __restrict v, float* __restrict r, int32_t count);
+SSN_DECLSPEC void SSN_CDECL DistanceFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
+
 SSN_EXTERN_C_END
 
 #endif //SimdSharp_Native_h
