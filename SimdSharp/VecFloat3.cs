@@ -200,6 +200,14 @@ namespace SimdSharp {
             NativeMethods.DistanceFloat3(a.X._buffer, a.Y._buffer, a.Z._buffer, b.X._buffer, b.Y._buffer, b.Z._buffer, result._buffer, a.X._count);
         }
 
+        public static void DistanceSquared(VecFloat3 a, VecFloat3 b, VecFloat result) {
+#if DEBUG
+            if ((a.X._count != result._count)||(b.X._count != result._count))
+                throw new ArgumentOutOfRangeException();
+#endif
+            NativeMethods.DistanceSquaredFloat3(a.X._buffer, a.Y._buffer, a.Z._buffer, b.X._buffer, b.Y._buffer, b.Z._buffer, result._buffer, a.X._count);
+        }
+
         public static void Abs(VecFloat3 a, VecFloat3 result) {
             VecFloat.Abs(a.X, result.X);
             VecFloat.Abs(a.Y, result.Y);
@@ -221,6 +229,96 @@ namespace SimdSharp {
                 positionIn.Count);
         }
 
+        public static void CatmullRom(VecFloat3 a, VecFloat3 b, VecFloat3 c, VecFloat3 d, VecFloat amount, VecFloat3 result) {
+            VecFloat.CatmullRom(a.X, b.X, c.X, d.X, amount, result.X);
+            VecFloat.CatmullRom(a.Y, b.Y, c.Y, d.Y, amount, result.Y);
+            VecFloat.CatmullRom(a.Z, b.Z, c.Z, d.Z, amount, result.Z);
+        }
+
+        public static void Negate(VecFloat3 a, VecFloat3 result) {
+            VecFloat.Negate(a.X, result.X);
+            VecFloat.Negate(a.Y, result.Y);
+            VecFloat.Negate(a.Z, result.Z);
+        }
+
+        public static void Hermite(VecFloat3 a, VecFloat3 ta, VecFloat3 b, VecFloat3 tb, VecFloat amount, VecFloat3 result) {
+            NativeMethods.HermiteFloat3(
+                a.X._buffer, a.Y._buffer, a.Z._buffer,
+                ta.X._buffer, ta.Y._buffer, ta.Z._buffer,
+                b.X._buffer, b.Y._buffer, b.Z._buffer,
+                tb.X._buffer, tb.Y._buffer, tb.Z._buffer,
+                amount._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void SmoothStep(VecFloat3 a, VecFloat3 b, VecFloat amount, VecFloat3 result) {
+            NativeMethods.SmoothstepFloat3(
+                a.X._buffer, a.Y._buffer, a.Z._buffer,
+                b.X._buffer, b.Y._buffer, b.Z._buffer,
+                amount._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void BarycentricFloat3(VecFloat3 v1, VecFloat3 v2, VecFloat3 v3, VecFloat a1, VecFloat a2, VecFloat3 result) {
+            NativeMethods.BarycentricFloat3(
+                v1.X._buffer, v1.Y._buffer, v1.Z._buffer,
+                v2.X._buffer, v2.Y._buffer, v2.Z._buffer,
+                v3.X._buffer, v3.Y._buffer, v3.Z._buffer,
+                a1._buffer,
+                a2._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void Cross(VecFloat3 a, VecFloat3 b, VecFloat3 result) {
+            NativeMethods.CrossFloat3(
+                a.X._buffer, a.Y._buffer, a.Z._buffer,
+                b.X._buffer, b.Y._buffer, b.Z._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void Reflect(VecFloat3 vector, VecFloat3 normal, VecFloat3 result) {
+            NativeMethods.ReflectFloat3(
+                vector.X._buffer, vector.Y._buffer, vector.Z._buffer,
+                normal.X._buffer, normal.Y._buffer, normal.Z._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void Reflect(VecFloat3 vector, VecFloat matrix, VecFloat3 result) {
+            if (matrix.Count != 16)
+                throw new ArgumentOutOfRangeException("matrix");
+            NativeMethods.TransformFloat3(
+                vector.X._buffer, vector.Y._buffer, vector.Z._buffer,
+                matrix._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void Refract(VecFloat3 vector, VecFloat3 normal, VecFloat etaiOverEtat, VecFloat3 result) {
+            NativeMethods.RefractFloat3(
+                vector.X._buffer, vector.Y._buffer, vector.Z._buffer,
+                normal.X._buffer, normal.Y._buffer, normal.Z._buffer,
+                etaiOverEtat._buffer,
+                result.X._buffer, result.Y._buffer, result.Z._buffer,
+                result.Count);
+        }
+
+        public static void LinearToSrgb(VecFloat3 a, VecFloat3 result) {
+            VecFloat.LinearToSrgb(a.X, result.X);
+            VecFloat.LinearToSrgb(a.Y, result.Y);
+            VecFloat.LinearToSrgb(a.Z, result.Z);
+        }
+
+        public static void SrgbToLinear(VecFloat3 a, VecFloat3 result) {
+            VecFloat.SrgbToLinear(a.X, result.X);
+            VecFloat.SrgbToLinear(a.Y, result.Y);
+            VecFloat.SrgbToLinear(a.Z, result.Z);
+        }
+
         class NativeMethods {
             [DllImport("SimdSharpNative.dll", EntryPoint = "NormalizeFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
             public static extern unsafe void NormalizeFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr rx, IntPtr ry, IntPtr rz, int count);
@@ -232,6 +330,8 @@ namespace SimdSharp {
             public static extern unsafe void DotFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr bx, IntPtr by, IntPtr bz, IntPtr r, int count);
             [DllImport("SimdSharpNative.dll", EntryPoint = "DistanceFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
             public static extern unsafe void DistanceFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr bx, IntPtr by, IntPtr bz, IntPtr r, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "DistanceSquaredFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void DistanceSquaredFloat3(IntPtr ax, IntPtr ay, IntPtr az, IntPtr bx, IntPtr by, IntPtr bz, IntPtr r, int count);
             [DllImport("SimdSharpNative.dll", EntryPoint = "VerletFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
             public static extern unsafe void VerletFloat3(
                 IntPtr positionInX, IntPtr positionInY, IntPtr positionInZ,
@@ -244,6 +344,63 @@ namespace SimdSharp {
                 IntPtr positionOutX, IntPtr positionOutY, IntPtr positionOutZ,
                 IntPtr velocityOutX, IntPtr velocityOutY, IntPtr velocityOutZ,
                 IntPtr accelerationOutX, IntPtr accelerationOutY, IntPtr accelerationOutZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "HermiteFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void HermiteFloat3(
+                IntPtr aX, IntPtr aY, IntPtr aZ,
+                IntPtr taX, IntPtr taY, IntPtr taZ,
+                IntPtr bX, IntPtr bY, IntPtr bZ,
+                IntPtr tbX, IntPtr tbY, IntPtr tbZ,
+                IntPtr amount,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SmoothstepFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SmoothstepFloat3(
+                IntPtr aX, IntPtr aY, IntPtr aZ,
+                IntPtr bX, IntPtr bY, IntPtr bZ,
+                IntPtr amount,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "BarycentricFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void BarycentricFloat3(
+                IntPtr v1X, IntPtr v1Y, IntPtr v1Z,
+                IntPtr v2X, IntPtr v2Y, IntPtr v2Z,
+                IntPtr v3X, IntPtr v3Y, IntPtr v3Z,
+                IntPtr a1,
+                IntPtr a2,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "CrossFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void CrossFloat3(
+                IntPtr aX, IntPtr aY, IntPtr aZ,
+                IntPtr bX, IntPtr bY, IntPtr bZ,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "ReflectFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void ReflectFloat3(
+                IntPtr vectorX, IntPtr vectorY, IntPtr vectorZ,
+                IntPtr normalX, IntPtr normalY, IntPtr normalZ,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "TransformFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void TransformFloat3(
+                IntPtr vectorX, IntPtr vectorY, IntPtr vectorZ,
+                IntPtr matrix,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
+                int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "RefractFloat3", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void RefractFloat3(
+                IntPtr vectorX, IntPtr vectorY, IntPtr vectorZ,
+                IntPtr normalX, IntPtr normalY, IntPtr normalZ,
+                IntPtr etaiOverEtat,
+                IntPtr resultX, IntPtr resultY, IntPtr resultZ,
                 int count);
         }
     }

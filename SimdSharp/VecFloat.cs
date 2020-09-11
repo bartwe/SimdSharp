@@ -251,65 +251,168 @@ namespace SimdSharp {
 #endif
             NativeMethods.LerpFloat(a._buffer, b._buffer, f._buffer, result._buffer, result._count);
         }
-    }
 
-    internal class NativeMethods {
-        [DllImport("SimdSharpNative.dll", EntryPoint = "AllocateFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr AllocateFloat(int count);
+        public static void CatmullRom(VecFloat a, VecFloat b, VecFloat c, VecFloat d, VecFloat amount, VecFloat result) {
+#if DEBUG
+            if ((a._count != result._count) || (b._count != result._count) || (c._count != result._count) || (d._count != result._count) || (amount._count != result._count))
+                throw new ArgumentOutOfRangeException();
+            if ((result._buffer == a._buffer) || (result._buffer == b._buffer) || (result._buffer == c._buffer) || (result._buffer == d._buffer) || (result._buffer == amount._buffer))
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.CatmullRomFloat(a._buffer, b._buffer, c._buffer, d._buffer, amount._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "ReleaseFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern void ReleaseFloat(IntPtr buffer);
+        public static void Negate(VecFloat a, VecFloat result) {
+#if DEBUG
+            if (a._count != result._count)
+                throw new ArgumentOutOfRangeException();
+            if (result._buffer == a._buffer)
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.NegateFloat(a._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "GetRangeFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void GetRangeFloat(IntPtr buffer, int offset, float* values, int valuesOffset, int count);
+        public static void Hermite(VecFloat a, VecFloat ta, VecFloat b, VecFloat tb, VecFloat amount, VecFloat result) {
+#if DEBUG
+            if ((a._count != result._count) || (b._count != result._count) || (ta._count != result._count) || (tb._count != result._count) || (amount._count != result._count))
+                throw new ArgumentOutOfRangeException();
+            if ((result._buffer == a._buffer) || (result._buffer == b._buffer) || (result._buffer == ta._buffer) || (result._buffer == tb._buffer) || (result._buffer == amount._buffer))
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.HermiteFloat(a._buffer, ta._buffer, b._buffer, tb._buffer, amount._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "SetRangeFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void SetRangeFloat(IntPtr buffer, int offset, float* values, int valuesOffset, int count);
+        public static void SmoothStep(VecFloat a, VecFloat b, VecFloat amount, VecFloat result) {
+#if DEBUG
+            if ((a._count != result._count) || (b._count != result._count) || (amount._count != result._count) )
+                throw new ArgumentOutOfRangeException();
+            if ((result._buffer == a._buffer) || (result._buffer == b._buffer) || (result._buffer == amount._buffer))
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.SmoothstepFloat(a._buffer, b._buffer, amount._buffer, result._buffer, result.Count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "SetAllFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void SetAllFloat(IntPtr buffer, float value, int count);
+        public static void Barycentric(VecFloat v1, VecFloat v2, VecFloat v3, VecFloat a1, VecFloat a2, VecFloat result) {
+#if DEBUG
+            if ((v1._count != result._count) || (v2._count != result._count) || (v3._count != result._count) || (a1._count != result._count) || (a2._count != result._count))
+                throw new ArgumentOutOfRangeException();
+            if ((result._buffer == v1._buffer) || (result._buffer == v2._buffer) || (result._buffer == v3._buffer) || (result._buffer == a1._buffer) || (result._buffer == a2._buffer))
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.BarycentricFloat(v1._buffer, v2._buffer, v3._buffer, a1._buffer, a2._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "MinFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void MinFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+        public static void Sqrt(VecFloat a, VecFloat result) {
+#if DEBUG
+            if (a._count != result._count)
+                throw new ArgumentOutOfRangeException();
+            if (result._buffer == a._buffer)
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.SqrtFloat(a._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "MaxFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void MaxFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+        public static void LinearToSrgb(VecFloat a, VecFloat result) {
+#if DEBUG
+            if (a._count != result._count)
+                throw new ArgumentOutOfRangeException();
+            if (result._buffer == a._buffer)
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.LinearToSrgbFloat(a._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "ClampFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void ClampFloat(IntPtr buffer, IntPtr low, IntPtr high, IntPtr result, int count);
+        public static void SrgbToLinear(VecFloat a, VecFloat result) {
+#if DEBUG
+            if (a._count != result._count)
+                throw new ArgumentOutOfRangeException();
+            if (result._buffer == a._buffer)
+                throw new ArgumentException("Result vector may not also be input vector", "result");
+#endif
+            NativeMethods.SrgbToLinearFloat(a._buffer, result._buffer, result._count);
+        }
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "SumFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe float SumFloat(IntPtr buffer, int count);
+        internal class NativeMethods {
+            [DllImport("SimdSharpNative.dll", EntryPoint = "AllocateFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern IntPtr AllocateFloat(int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "AddFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void AddFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "ReleaseFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern void ReleaseFloat(IntPtr buffer);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "SubtractFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void SubtractFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "GetRangeFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void GetRangeFloat(IntPtr buffer, int offset, float* values, int valuesOffset, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "MultiplyFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void MultiplyFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SetRangeFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SetRangeFloat(IntPtr buffer, int offset, float* values, int valuesOffset, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "DivideFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void DivideFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SetAllFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SetAllFloat(IntPtr buffer, float value, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "MultiplyAddFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void MultiplyAddFloat(IntPtr a, IntPtr b, IntPtr c, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "MinFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void MinFloat(IntPtr a, IntPtr b, IntPtr result, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "FloorFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void FloorFloat(IntPtr a, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "MaxFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void MaxFloat(IntPtr a, IntPtr b, IntPtr result, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "CeilFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void CeilFloat(IntPtr a, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "ClampFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void ClampFloat(IntPtr buffer, IntPtr low, IntPtr high, IntPtr result, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "SelectFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void SelectFloat(IntPtr a, IntPtr b, IntPtr c, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SumFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe float SumFloat(IntPtr buffer, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "AbsFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void AbsFloat(IntPtr a, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "AddFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void AddFloat(IntPtr a, IntPtr b, IntPtr result, int count);
 
-        [DllImport("SimdSharpNative.dll", EntryPoint = "LerpFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern unsafe void LerpFloat(IntPtr a, IntPtr b, IntPtr f, IntPtr result, int count);
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SubtractFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SubtractFloat(IntPtr a, IntPtr b, IntPtr result, int count);
 
+            [DllImport("SimdSharpNative.dll", EntryPoint = "MultiplyFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void MultiplyFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "DivideFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void DivideFloat(IntPtr a, IntPtr b, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "MultiplyAddFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void MultiplyAddFloat(IntPtr a, IntPtr b, IntPtr c, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "FloorFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void FloorFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "CeilFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void CeilFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SelectFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SelectFloat(IntPtr a, IntPtr b, IntPtr c, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "AbsFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void AbsFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "LerpFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void LerpFloat(IntPtr a, IntPtr b, IntPtr f, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "CatmullRomFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void CatmullRomFloat(IntPtr a, IntPtr b, IntPtr c, IntPtr d, IntPtr amount, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "NegateFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void NegateFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "CatmullRomFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void HermiteFloat(IntPtr a, IntPtr ta, IntPtr b, IntPtr tb, IntPtr amount, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SmoothstepFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SmoothstepFloat(IntPtr a, IntPtr b, IntPtr f, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "BarycentricFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void BarycentricFloat(IntPtr v1, IntPtr v2, IntPtr v3, IntPtr a1, IntPtr a2, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SqrtFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SqrtFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "LinearToSrgbFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void LinearToSrgbFloat(IntPtr a, IntPtr result, int count);
+
+            [DllImport("SimdSharpNative.dll", EntryPoint = "SrgbToLinearFloat", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+            public static extern unsafe void SrgbToLinearFloat(IntPtr a, IntPtr result, int count);
+        }
     }
 }

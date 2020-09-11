@@ -52,6 +52,7 @@ SSN_DECLSPEC void SSN_CDECL AbsFloat(float* __restrict a, float* __restrict resu
 SSN_DECLSPEC void SSN_CDECL DotFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
 SSN_DECLSPEC void SSN_CDECL LerpFloat(float* __restrict a, float* __restrict b, float* __restrict v, float* __restrict r, int32_t count);
 SSN_DECLSPEC void SSN_CDECL DistanceFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
+SSN_DECLSPEC void SSN_CDECL DistanceSquaredFloat3(float* __restrict ax, float* __restrict ay, float* __restrict az, float* __restrict bx, float* __restrict by, float* __restrict bz, float* __restrict r, int32_t count);
 
 SSN_DECLSPEC void SSN_CDECL VerletFloat3(
 	float* __restrict positionInX, float* __restrict positionInY, float* __restrict positionInZ,
@@ -65,6 +66,68 @@ SSN_DECLSPEC void SSN_CDECL VerletFloat3(
 	float* __restrict velocityOutX, float* __restrict velocityOutY, float* __restrict velocityOutZ,
 	float* __restrict accelerationOutX, float* __restrict accelerationOutY, float* __restrict accelerationOutZ,
 	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL CatmullRomFloat(float* __restrict a, float* __restrict b, float* __restrict c, float* __restrict d, float* __restrict amount, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL NegateFloat(float* __restrict a, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL HermiteFloat(float* __restrict a, float* __restrict ta, float* __restrict b, float* __restrict tb, float* __restrict amount, float* __restrict result, int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL HermiteFloat3(
+	float* __restrict aX, float* __restrict aY, float* __restrict aZ,
+	float* __restrict taX, float* __restrict taY, float* __restrict taZ,
+	float* __restrict bX, float* __restrict bY, float* __restrict bZ,
+	float* __restrict tbX, float* __restrict tbY, float* __restrict tbZ,
+	float* __restrict amount, 
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL SmoothstepFloat(float* __restrict a, float* __restrict b, float* __restrict f, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL SmoothstepFloat3(
+	float* __restrict aX, float* __restrict aY, float* __restrict aZ,
+	float* __restrict bX, float* __restrict bY, float* __restrict bZ,
+	float* __restrict f,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL BarycentricFloat(float* __restrict v1, float* __restrict v2, float* __restrict v3, float* __restrict a1, float* __restrict a2, float* __restrict result, int count);
+
+SSN_DECLSPEC void SSN_CDECL BarycentricFloat3(
+	float* __restrict v1X, float* __restrict v1Y, float* __restrict v1Z,
+	float* __restrict v2X, float* __restrict v2Y, float* __restrict v2Z,
+	float* __restrict v3X, float* __restrict v3Y, float* __restrict v3Z,
+	float* __restrict a1,
+	float* __restrict a2,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL CrossFloat3(
+	float* __restrict aX, float* __restrict aY, float* __restrict aZ,
+	float* __restrict bX, float* __restrict bY, float* __restrict bZ,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL ReflectFloat3(
+	float* __restrict vectorX, float* __restrict vectorY, float* __restrict vectorZ,
+	float* __restrict normalX, float* __restrict normalY, float* __restrict normalZ,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL TransformFloat3(
+	float* __restrict vectorX, float* __restrict vectorY, float* __restrict vectorZ,
+	float* __restrict matrix,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int count);
+
+SSN_DECLSPEC void SSN_CDECL RefractFloat3(
+	float* __restrict vectorX, float* __restrict vectorY, float* __restrict vectorZ,
+	float* __restrict normalX, float* __restrict normalY, float* __restrict normalZ,
+	float* __restrict etaiOverEtat,
+	float* __restrict resultX, float* __restrict resultY, float* __restrict resultZ,
+	int32_t count);
+
+SSN_DECLSPEC void SSN_CDECL SqrtFloat(float* __restrict a, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL SrgbToLinearFloat(float* __restrict a, float* __restrict result, int32_t count);
+SSN_DECLSPEC void SSN_CDECL LinearToSrgbFloat(float* __restrict a, float* __restrict result, int32_t count);
+
 
 SSN_EXTERN_C_END
 
